@@ -1,0 +1,38 @@
+//.text:00401000    push  ebp                          immette la flag ebp base pointer nello stack
+//.text:00401001    mov   ebp, esp                     muove la flag esp stack pointer su ebp
+//.text:00401003    push ecx                           mette il registro ecx nello stack
+//.text:00401004    push 0       ; dwReserved          mette il valore 0 nello stack (dwReserved)
+//.text:00401006    push 0       ; lpdwFlags           mette il valore 0 nello stack (lpdwFlags)
+//.text:00401008    call  ds:InternetGetConnectedState chiamata a Internetgetconnectedstate
+//.text:0040100E    mov  [ebp+var_4], eax              muove il registro eax nella var_4
+//.text:00401011    cmp [ebp+var_4], 0                 compara Var_4 con il valore 0 
+//.text:00401015    jz short loc_40102B                JumpZero salta se la ZF ha valore 1
+
+
+//Success internet connection
+
+push offset aSuccessInterne ; "Success: Internet Connection\n" mette l'offset della stringa "Success: Internet Connection\n" nello stack
+call sub_40117F                                                chiama una subroutine con la stringa come argomento
+add esp, 4                                                     aggiunge valore 4 al registro esp
+mov eax, 1                                                     muove valore 1 al registro eax
+jmp short loc_40103A                                           Short Jump alla locazione loc_40103A
+
+
+//Error internet connection
+
+
+loc_40102b:              ; "Error  1.1: No Internet\n"      Errore all'indirizzo della stringa
+push offset aError1_NoInte
+call sub_40117F                                             chiama la subroutine 40117F
+add esp, 4                                                  aggiunge valore 4 al registro esp
+xor eax, eax                                                azzera il registro eax
+
+
+//
+
+
+loc_40103A:
+mov esp, ebp                                                ripristina lo stack pointer                                               
+pop ebp                                                     riprisitna il base pointer                                                     
+retn                                                        restiusce il controllo
+sub_401000 endp                                             fine della subroutine
